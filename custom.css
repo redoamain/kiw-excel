@@ -1,0 +1,176 @@
+/* ==========================================================================
+   kiw-excel - Custom Branding & Blue Theme Stylesheet for Grist
+   ========================================================================== */
+
+@layer grist-custom {
+  :root {
+    /* Logo & Top Bar */
+    --icon-GristLogo: url("ui-icons/Logo/GristLogo.svg");
+    --grist-theme-logo-bg: #1e3a8a;
+    --grist-theme-logo-size: 22px 22px;
+
+    /* Loading Screen Grain Animation Colors (Blue Palette) */
+    --color-logo-row:  #3b82f6;
+    --color-logo-col:  #2563eb;
+    --color-logo-cell: #93c5fd;
+    --color-logo-bg:   #0f172a;
+    --color-navbar-bg: var(--color-logo-bg);
+  }
+
+  /* ------------------------------------------------------------------------
+     LIGHT THEME (Default)
+     ------------------------------------------------------------------------ */
+  :root,
+  :root[data-grist-theme="GristLight"] {
+    /* Core Accent & Primary Palette (Blue) */
+    --grist-theme-primary: #2563eb;
+    --grist-theme-primary-muted: #1d4ed8;
+    --grist-theme-primary-dim: #1e40af;
+    --grist-theme-primary-emphasis: #dbeafe;
+    --grist-theme-primary-translucent: rgba(37, 99, 235, 0.4);
+
+    /* Controls & Buttons */
+    --grist-theme-control-border: 1px solid #2563eb;
+    --grist-theme-control-primary-bg: #2563eb;
+    --grist-theme-control-primary-hover-bg: #1d4ed8;
+    --grist-theme-control-hover-fg: #2563eb;
+    --grist-theme-add-new-circle-bg: #2563eb;
+    --grist-theme-add-new-circle-hover-bg: #1d4ed8;
+    --grist-theme-add-new-circle-small-bg: #2563eb;
+    --grist-theme-add-new-circle-small-hover-bg: #1d4ed8;
+    --grist-theme-icon-button-primary-bg: #2563eb;
+    --grist-theme-icon-button-primary-hover-bg: #1d4ed8;
+
+    /* Spreadsheet Grid Selection & Cursor */
+    --grist-theme-cursor: #2563eb;
+    --grist-theme-cursor-inactive: #93c5fd;
+    --grist-theme-token-cursor: #2563eb;
+    --grist-theme-token-cursor-inactive: #93c5fd;
+
+    --grist-theme-selection: rgba(37, 99, 235, 0.15);
+    --grist-theme-selection-opaque-bg: #eff6ff;
+    --grist-theme-selection-opaque-dark-bg: #dbeafe;
+    --grist-theme-selection-darker: rgba(37, 99, 235, 0.25);
+    --grist-theme-selection-darkest: rgba(37, 99, 235, 0.35);
+
+    --grist-theme-token-selection: rgba(37, 99, 235, 0.15);
+    --grist-theme-token-selection-opaque: #eff6ff;
+    --grist-theme-token-selection-darker-opaque: #dbeafe;
+    --grist-theme-token-selection-darker: rgba(37, 99, 235, 0.25);
+    --grist-theme-token-selection-darkest: rgba(37, 99, 235, 0.35);
+
+    /* Form Controls, Inputs & Checkboxes */
+    --grist-theme-checkbox-selected-bg: #2563eb;
+    --grist-theme-input-focus: #2563eb;
+    --grist-theme-widget-active-border: #2563eb;
+
+    /* Navigation, Panels & Tabs */
+    --grist-theme-link: #2563eb;
+    --grist-theme-link-hover: #1d4ed8;
+    --grist-theme-accent-icon: #2563eb;
+    --grist-theme-accent-border: #2563eb;
+    --grist-theme-accent-text: #2563eb;
+    --grist-theme-right-panel-tab-selected-icon: #2563eb;
+    --grist-theme-right-panel-subtab-selected-underline: #2563eb;
+    --grist-theme-right-panel-tab-button-hover-bg: #1d4ed8;
+
+    /* Toasts & Indicators */
+    --grist-theme-toast-control-fg: #2563eb;
+    --grist-theme-toast-success-icon: #2563eb;
+    --grist-theme-progress-bar-fg: #2563eb;
+  }
+
+  /* ------------------------------------------------------------------------
+     DARK THEME (If selected by user)
+     ------------------------------------------------------------------------ */
+  :root[data-grist-theme="GristDark"] {
+    --grist-theme-primary: #3b82f6;
+    --grist-theme-primary-muted: #60a5fa;
+    --grist-theme-primary-dim: #1d4ed8;
+    --grist-theme-primary-emphasis: #1e3a8a;
+    --grist-theme-primary-translucent: rgba(59, 130, 246, 0.4);
+
+    --grist-theme-control-border: 1px solid #3b82f6;
+    --grist-theme-control-primary-bg: #2563eb;
+    --grist-theme-control-primary-hover-bg: #3b82f6;
+    --grist-theme-control-hover-fg: #60a5fa;
+    --grist-theme-add-new-circle-bg: #2563eb;
+    --grist-theme-add-new-circle-hover-bg: #3b82f6;
+
+    --grist-theme-cursor: #60a5fa;
+    --grist-theme-cursor-inactive: #1d4ed8;
+    --grist-theme-token-cursor: #60a5fa;
+    --grist-theme-token-cursor-inactive: #1d4ed8;
+
+    --grist-theme-selection: rgba(59, 130, 246, 0.25);
+    --grist-theme-token-selection: rgba(59, 130, 246, 0.25);
+
+    --grist-theme-link: #60a5fa;
+    --grist-theme-link-hover: #93c5fd;
+    --grist-theme-toast-control-fg: #60a5fa;
+    --grist-theme-right-panel-tab-selected-icon: #60a5fa;
+    --grist-theme-right-panel-subtab-selected-underline: #60a5fa;
+  }
+}
+
+/* ==========================================================================
+   DIRECT ELEMENT & COMPONENT OVERRIDES
+   ========================================================================== */
+
+/* Startup Logo Grain Animation Colors */
+.grist-logo-grain.grain-col {
+  background: #2563eb !important;
+}
+.grist-logo-grain.grain-row {
+  background: #3b82f6 !important;
+}
+.grist-logo-grain.grain-cell {
+  background: #93c5fd !important;
+}
+#grist-logo-wrapper {
+  background-color: #0f172a !important;
+}
+
+/* Primary Buttons */
+.button-primary,
+button.primary,
+[class*="cssPrimaryButton"],
+[class*="primaryButton"] {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.button-primary:hover,
+button.primary:hover,
+[class*="cssPrimaryButton"]:hover,
+[class*="primaryButton"]:hover {
+  background-color: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+}
+
+/* Add New Record / Circular Button */
+[class*="addNewCircle"],
+[class*="AddNewCircle"] {
+  background-color: #2563eb !important;
+}
+
+[class*="addNewCircle"]:hover,
+[class*="AddNewCircle"]:hover {
+  background-color: #1d4ed8 !important;
+}
+
+/* Grid Cursor & Active Cell Highlighting */
+.gridview_data_pane .cursor,
+.selected-region {
+  border-color: #2563eb !important;
+}
+
+/* Clean sidebar footer branding */
+[class*="cssVersionFooter"] [class*="cssFooterSupport"] {
+  display: none !important;
+}
+[class*="cssVersionFooter"] [class*="cssFooterTitle"] {
+  color: #64748b !important;
+  font-weight: 600;
+}

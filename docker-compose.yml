@@ -1,0 +1,101 @@
+services:
+  grist:
+    image: gristlabs/grist-omnibus:latest
+    container_name: grist
+    restart: unless-stopped
+    ports:
+      - "${GRIST_PORT:-8484}:80"
+    environment:
+      # --- URL & Organisasi ---
+      - URL=${APP_HOME_URL:-http://localhost:8484}
+      - TEAM=${TEAM:-citiplumb}
+
+      # --- Akun Utama (Admin) ---
+      - EMAIL=${EMAIL:-admin@citiplumb.local}
+      - PASSWORD=${PASSWORD:-AdminPass123!}
+
+      # --- Akun Departemen ---
+      - EMAIL2=${EMAIL2:-gudang.lokal@citiplumb.local}
+      - PASSWORD2=${PASSWORD2:-GudangLokal123!}
+
+      - EMAIL3=${EMAIL3:-gudang.impor@citiplumb.local}
+      - PASSWORD3=${PASSWORD3:-GudangImpor123!}
+
+      - EMAIL4=${EMAIL4:-kepala.gudang@citiplumb.local}
+      - PASSWORD4=${PASSWORD4:-KepalaGudang123!}
+
+      - EMAIL5=${EMAIL5:-ppic@citiplumb.local}
+      - PASSWORD5=${PASSWORD5:-PpicPass123!}
+
+      - EMAIL6=${EMAIL6:-plating@citiplumb.local}
+      - PASSWORD6=${PASSWORD6:-PlatingPass123!}
+
+      - EMAIL7=${EMAIL7:-injeksi@citiplumb.local}
+      - PASSWORD7=${PASSWORD7:-InjeksiPass123!}
+
+      - EMAIL8=${EMAIL8:-spray@citiplumb.local}
+      - PASSWORD8=${PASSWORD8:-SprayPass123!}
+
+      - EMAIL9=${EMAIL9:-assembly@citiplumb.local}
+      - PASSWORD9=${PASSWORD9:-AssemblyPass123!}
+
+      # --- Keamanan & Sesi ---
+      - GRIST_SESSION_SECRET=${GRIST_SESSION_SECRET}
+      - GRIST_SANDBOX_FLAVOR=${GRIST_SANDBOX_FLAVOR:-gvisor}
+
+      # --- Branding & Kustomisasi Tampilan (kiw-excel) ---
+      - APP_STATIC_INCLUDE_CUSTOM_CSS=true
+      - GRIST_PAGE_TITLE_SUFFIX= - kiw-excel
+      - GRIST_HIDE_UI_ELEMENTS=${GRIST_HIDE_UI_ELEMENTS:-helpCenter,billing,templates,supportGrist}
+
+      # --- Widget & Galeri Plugin ---
+      - GRIST_WIDGET_LIST_URL=${GRIST_WIDGET_LIST_URL:-https://github.com/gristlabs/grist-widget/releases/download/latest/manifest.json}
+
+      # --- Telemetri (off / limited / full) ---
+      - GRIST_TELEMETRY_LEVEL=${GRIST_TELEMETRY_LEVEL:-off}
+
+    volumes:
+      # Data persisten (dokumen sqlite, database metadata, plugin, auth dex)
+      - ./grist-data:/persist
+
+      # Kustomisasi Branding kiw-excel & Tema Biru
+      - ./custom.css:/grist/static/custom.css:ro
+      - ./logo.svg:/grist/static/ui-icons/Logo/GristLogo.svg:ro
+      - ./favicon.png:/grist/static/icons/favicon.png:ro
+      - ./dex.yaml:/settings/dex.yaml:ro
+      - ./dex-styles.css:/srv/dex/web/themes/light/styles.css:ro
+      - ./favicon.png:/srv/dex/web/themes/light/favicon.png:ro
+
+    healthcheck:
+      test:
+        - "CMD"
+        - "node"
+        - "-e"
+        - "require('http').get('http://127.0.0.1:80/status', res => process.exit(res.statusCode === 200 ? 0 : 1))"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 25s
+
+  # --------------------------------------------------------------------------
+  # OPSIONAL: Reverse Proxy Otomatis SSL (Caddy)
+  # Aktifkan jika Anda ingin mengekspos Grist ke internet langsung dengan domain
+  # Jalankan dengan: docker compose --profile with-proxy up -d
+  # --------------------------------------------------------------------------
+  # caddy:
+  #   image: caddy:alpine
+  #   container_name: grist-caddy
+  #   restart: unless-stopped
+  #   profiles: ["with-proxy"]
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   environment:
+  #     - GRIST_DOMAIN=${GRIST_DOMAIN:-grist.example.com}
+  #   command: >
+  #     caddy reverse-proxy --from https://$${GRIST_DOMAIN} --to grist:8484
+  #   volumes:
+  #     - ./caddy-data:/data
+  #     - ./caddy-config:/config
+  #   depends_on:
+  #     - grist

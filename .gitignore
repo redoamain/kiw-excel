@@ -1,0 +1,4 @@
+.env
+grist-data/
+caddy-data/
+caddy-config/
