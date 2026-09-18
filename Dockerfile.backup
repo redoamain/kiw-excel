@@ -1,0 +1,10 @@
+FROM alpine:latest
+
+RUN apk add --no-cache sqlite bash tzdata tar gzip coreutils findutils rclone
+
+COPY scripts/backup.sh /usr/local/bin/backup.sh
+COPY scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+RUN chmod +x /usr/local/bin/backup.sh /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/bin/sh", "/usr/local/bin/entrypoint.sh"]

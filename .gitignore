@@ -2,3 +2,5 @@
 grist-data/
 caddy-data/
 caddy-config/
+backups/
+rclone.conf

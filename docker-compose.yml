@@ -51,6 +51,16 @@ services:
       # --- Widget & Galeri Plugin ---
       - GRIST_WIDGET_LIST_URL=${GRIST_WIDGET_LIST_URL:-https://github.com/gristlabs/grist-widget/releases/download/latest/manifest.json}
 
+      # --- External Cloud Storage / S3 / MinIO / R2 Backup (Opsional) ---
+      - GRIST_DOCS_MINIO_BUCKET=${GRIST_DOCS_MINIO_BUCKET:-}
+      - GRIST_DOCS_MINIO_ENDPOINT=${GRIST_DOCS_MINIO_ENDPOINT:-}
+      - GRIST_DOCS_MINIO_PORT=${GRIST_DOCS_MINIO_PORT:-}
+      - GRIST_DOCS_MINIO_ACCESS_KEY=${GRIST_DOCS_MINIO_ACCESS_KEY:-}
+      - GRIST_DOCS_MINIO_SECRET_KEY=${GRIST_DOCS_MINIO_SECRET_KEY:-}
+      - GRIST_DOCS_MINIO_USE_SSL=${GRIST_DOCS_MINIO_USE_SSL:-}
+      - GRIST_DOCS_MINIO_BUCKET_REGION=${GRIST_DOCS_MINIO_BUCKET_REGION:-}
+      - GRIST_DOCS_MINIO_PREFIX=${GRIST_DOCS_MINIO_PREFIX:-}
+
       # --- Telemetri (off / limited / full) ---
       - GRIST_TELEMETRY_LEVEL=${GRIST_TELEMETRY_LEVEL:-off}
 
@@ -76,6 +86,30 @@ services:
       timeout: 10s
       retries: 3
       start_period: 25s
+
+  # --------------------------------------------------------------------------
+  # SERVICE BACKUP OTOMATIS (External / Disk / Cloud)
+  # Menjalankan hot-backup SQLite konsisten & rotasi arsip secara terjadwal
+  # --------------------------------------------------------------------------
+  backup:
+    build:
+      context: .
+      dockerfile: Dockerfile.backup
+    image: kiw-excel-backup:latest
+    container_name: kiw-excel-backup
+    restart: unless-stopped
+    environment:
+      - BACKUP_CRON=${BACKUP_CRON:-0 2 * * *}
+      - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-14}
+      - BACKUP_ON_STARTUP=${BACKUP_ON_STARTUP:-true}
+      - TZ=${TZ:-Asia/Jakarta}
+      - RCLONE_REMOTE_DEST=${RCLONE_REMOTE_DEST:-}
+    volumes:
+      - ./grist-data:/data:ro
+      - ${BACKUP_DIR:-./backups}:/backups
+      - ./scripts:/scripts:ro
+    depends_on:
+      - grist
 
   # --------------------------------------------------------------------------
   # OPSIONAL: Reverse Proxy Otomatis SSL (Caddy)
