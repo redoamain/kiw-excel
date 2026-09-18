@@ -83,9 +83,20 @@ rm -rf "${WORK_DIR}"
 (cd "${BACKUP_DIR}" && sha256sum "${BACKUP_NAME}.tar.gz" > "${BACKUP_NAME}.tar.gz.sha256")
 
 ARCHIVE_SIZE=$(du -h "${ARCHIVE_FILE}" | cut -f1)
-echo "--> Backup completed successfully! Size: ${ARCHIVE_SIZE}"
+echo "--> Database archive completed successfully! Size: ${ARCHIVE_SIZE}"
 
-# 9. Optional: Cloud / Remote Sync via Rclone
+# 9. Automatic Export to Microsoft Excel (.xlsx)
+EXCEL_SCRIPT="/scripts/export_excel.py"
+if [ ! -f "$EXCEL_SCRIPT" ]; then
+  EXCEL_SCRIPT="/usr/local/bin/export_excel.py"
+fi
+
+if [ -f "$EXCEL_SCRIPT" ] && command -v python3 >/dev/null 2>&1; then
+  echo "--> Exporting spreadsheet documents to Excel (.xlsx)..."
+  DATA_DIR="${DATA_DIR}" BACKUP_DIR="${BACKUP_DIR}" python3 "$EXCEL_SCRIPT" || echo "WARNING: Excel export finished with warnings, continuing."
+fi
+
+# 10. Optional: Cloud / Remote Sync via Rclone
 if [ -n "${RCLONE_DEST}" ]; then
   if command -v rclone >/dev/null 2>&1 && [ -f "/root/.config/rclone/rclone.conf" ]; then
     echo "--> Syncing backup to remote storage (${RCLONE_DEST})..."
@@ -97,7 +108,7 @@ if [ -n "${RCLONE_DEST}" ]; then
   fi
 fi
 
-# 10. Clean up old local backups based on retention days
+# 11. Clean up old local backups based on retention days
 if [ "${RETENTION_DAYS}" -gt 0 ]; then
   echo "--> Cleaning up local backups older than ${RETENTION_DAYS} days..."
   find "${BACKUP_DIR}" -name "kiw-excel-backup-*.tar.gz" -mtime +"${RETENTION_DAYS}" -delete || true
