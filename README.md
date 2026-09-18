@@ -67,6 +67,7 @@ Sistem telah dilengkapi dengan service backup otomatis (`kiw-excel-backup`) yang
 - **Startup Backup**: Membuat backup instan otomatis saat container pertama kali dinyalakan.
 - **Rotasi Otomatis**: Otomatis menghapus arsip lama yang melebihi batas retensi (default: 14 hari via `BACKUP_RETENTION_DAYS=14`).
 - **Verifikasi SHA256**: Setiap arsip `.tar.gz` dilengkapi dengan berkas `.sha256` untuk verifikasi integritas data.
+- **Ekspor Otomatis ke File Excel (.xlsx)**: Selain arsip database `.tar.gz`, sistem otomatis mengonversi seluruh tabel spreadsheet menjadi file Microsoft Excel asli berformat multi-sheet di dalam folder `backups/excel/` yang siap dibuka langsung tanpa perlu proses restore.
 
 ### 2. Menjalankan Backup Manual (Kapan Saja)
 Anda dapat memicu pembuatan backup kapan saja tanpa menunggu jadwal cron:
