@@ -4,3 +4,10 @@ caddy-data/
 caddy-config/
 backups/
 rclone.conf
+
+# Raw factory input data (contains files >100MB)
+8 AGUSTUS/
+
+# Generated PO export outputs (preserve official templates)
+exports/*
+!exports/Template_*.xlsx

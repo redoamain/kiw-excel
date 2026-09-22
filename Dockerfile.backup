@@ -5,7 +5,8 @@ RUN apk add --no-cache sqlite bash tzdata tar gzip coreutils findutils rclone py
 COPY scripts/backup.sh /usr/local/bin/backup.sh
 COPY scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY scripts/export_excel.py /usr/local/bin/export_excel.py
+COPY scripts/init_users.py /usr/local/bin/init_users.py
 
-RUN chmod +x /usr/local/bin/backup.sh /usr/local/bin/entrypoint.sh /usr/local/bin/export_excel.py
+RUN chmod +x /usr/local/bin/backup.sh /usr/local/bin/entrypoint.sh /usr/local/bin/export_excel.py /usr/local/bin/init_users.py
 
 ENTRYPOINT ["/bin/sh", "/usr/local/bin/entrypoint.sh"]

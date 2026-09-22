@@ -75,6 +75,7 @@ services:
       - ./dex.yaml:/settings/dex.yaml:ro
       - ./dex-styles.css:/srv/dex/web/themes/light/styles.css:ro
       - ./favicon.png:/srv/dex/web/themes/light/favicon.png:ro
+      - ./scripts:/scripts:ro
 
     healthcheck:
       test:
@@ -88,8 +89,9 @@ services:
       start_period: 25s
 
   # --------------------------------------------------------------------------
-  # SERVICE BACKUP OTOMATIS (External / Disk / Cloud)
-  # Menjalankan hot-backup SQLite konsisten & rotasi arsip secara terjadwal
+  # SERVICE BACKUP OTOMATIS & SINKRONISASI AKUN TIM
+  # Menjalankan hot-backup SQLite konsisten & rotasi arsip secara terjadwal,
+  # serta memastikan akun departemen terdaftar otomatis pada tim citiplumb.
   # --------------------------------------------------------------------------
   backup:
     build:
@@ -98,14 +100,27 @@ services:
     image: kiw-excel-backup:latest
     container_name: kiw-excel-backup
     restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
     environment:
       - BACKUP_CRON=${BACKUP_CRON:-0 2 * * *}
       - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-14}
       - BACKUP_ON_STARTUP=${BACKUP_ON_STARTUP:-true}
       - TZ=${TZ:-Asia/Jakarta}
       - RCLONE_REMOTE_DEST=${RCLONE_REMOTE_DEST:-}
+      - TEAM=${TEAM:-citiplumb}
+      - EMAIL=${EMAIL:-admin@citiplumb.local}
+      - EMAIL2=${EMAIL2:-gudang.lokal@citiplumb.local}
+      - EMAIL3=${EMAIL3:-gudang.impor@citiplumb.local}
+      - EMAIL4=${EMAIL4:-kepala.gudang@citiplumb.local}
+      - EMAIL5=${EMAIL5:-ppic@citiplumb.local}
+      - EMAIL6=${EMAIL6:-plating@citiplumb.local}
+      - EMAIL7=${EMAIL7:-injeksi@citiplumb.local}
+      - EMAIL8=${EMAIL8:-spray@citiplumb.local}
+      - EMAIL9=${EMAIL9:-assembly@citiplumb.local}
     volumes:
-      - ./grist-data:/data:ro
+      - ./grist-data:/data
       - ${BACKUP_DIR:-./backups}:/backups
       - ./scripts:/scripts:ro
     depends_on:

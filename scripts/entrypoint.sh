@@ -33,6 +33,16 @@ if [ ! -f "$BACKUP_BIN" ]; then
 fi
 chmod +x "$BACKUP_BIN" 2>/dev/null || true
 
+# Synchronize department accounts and team memberships
+INIT_USERS_BIN="/scripts/init_users.py"
+if [ ! -f "$INIT_USERS_BIN" ]; then
+  INIT_USERS_BIN="/usr/local/bin/init_users.py"
+fi
+if [ -f "$INIT_USERS_BIN" ] && command -v python3 >/dev/null 2>&1; then
+  echo "--> Checking and synchronizing team accounts..."
+  python3 "$INIT_USERS_BIN" || true
+fi
+
 # Run backup on container startup if requested
 if [ "${BACKUP_ON_STARTUP:-true}" = "true" ]; then
   echo "--> Running initial startup backup..."
